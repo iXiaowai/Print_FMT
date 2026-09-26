@@ -151,21 +151,6 @@ CMake 的作用是生成可以在所选编译器环境中使用的原生 makefil
 
 构建库后，在类 Unix 系统上可以运行 `sudo make install` 安装它。
 
-### 构建文档
-
-要构建文档，需要在系统中安装以下软件：
-
-- [Python](https://www.python.org/)
-- [Doxygen](http://www.stack.nl/~dimitri/doxygen/)
-- [MkDocs](https://www.mkdocs.org/)，以及 `mkdocs-material`、`mkdocstrings`、
-  `pymdown-extensions` 和 `mike`
-
-首先按照上一节的说明使用 CMake 生成 makefile 或项目文件。
-然后编译 `doc` target/project，例如：
-
-    make doc
-
-这会在 `doc/html` 中生成 HTML 文档。
 
 ## 构建系统
 
@@ -239,11 +224,6 @@ CMake 的作用是生成可以在所选编译器环境中使用的原生 makefil
     fmt = subproject('fmt', default_options: ['header-only=true'])
     fmt_dep = fmt.get_variable('fmt_header_only_dep')
 
-### Android NDK
-
-{fmt} 提供了 [Android.mk 文件](
-https://github.com/fmtlib/fmt/blob/master/support/Android.mk)，可以使用
-[Android NDK](https://developer.android.com/tools/sdk/ndk/index.html) 构建库。
 
 ### 其他
 
