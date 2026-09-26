@@ -112,15 +112,3 @@ add_fmt_test(noexception-test
     embedded/noexception-test.cc
 )
 
-add_executable(perf-sanity
-    embedded/perf-sanity.cc
-)
-
-target_include_directories(perf-sanity
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
-)
-
-target_link_libraries(perf-sanity
-    fmt
-)
