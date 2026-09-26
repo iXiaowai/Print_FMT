@@ -1,261 +1,353 @@
-<img src="https://user-images.githubusercontent.com/576385/156254208-f5b743a9-88cf-439d-b0c0-923d53e8d551.png" alt="{fmt}" width="25%"/>
+# Print_FMT
 
-[![image](https://github.com/fmtlib/fmt/actions/workflows/linux.yml/badge.svg?branch=master)](
-https://github.com/fmtlib/fmt/actions?query=workflow%3Alinux)
-[![image](https://github.com/fmtlib/fmt/actions/workflows/macos.yml/badge.svg?branch=master)](
-https://github.com/fmtlib/fmt/actions?query=workflow%3Amacos)
-[![image](https://github.com/fmtlib/fmt/actions/workflows/windows.yml/badge.svg?branch=master)](
-https://github.com/fmtlib/fmt/actions?query=workflow%3Awindows)
-[![fmt is continuously fuzzed at oss-fuzz](https://oss-fuzz-build-logs.storage.googleapis.com/badges/fmt.svg)](
-https://issues.oss-fuzz.com/issues?q=title:fmt%20cc:victor.zverovich@gmail.com)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8880/badge)](
-https://www.bestpractices.dev/projects/8880)
-[![image](https://api.securityscorecards.dev/projects/github.com/fmtlib/fmt/badge)](
-https://securityscorecards.dev/viewer/?uri=github.com/fmtlib/fmt)
-[![Ask questions at StackOverflow with the tag fmt](
-https://img.shields.io/badge/stackoverflow-fmt-blue.svg)](https://stackoverflow.com/questions/tagged/fmt)
-[![Support Ukraine](
-https://img.shields.io/badge/Support-Ukraine-005BBB?labelColor=FFD500)](https://novaukraine.org/)
+基于 [`{fmt}`](https://github.com/fmtlib/fmt) 的精简版本，用于 **C/C++ 格式化库学习、代码裁剪以及嵌入式平台移植**。
 
-**{fmt}** is an open-source formatting library providing a fast and safe
-alternative to C stdio and C++ iostreams.
+本项目保留 `{fmt}` 的核心格式化功能，并对原项目的目录结构、构建系统、测试代码和文档进行精简，方便在资源受限或构建环境较简单的平台中进行移植和学习。
 
-[Documentation](https://fmt.dev)
+---
 
-[Cheat Sheets](https://hackingcpp.com/cpp/libs/fmt.html)
+## 一、项目特点
 
-Q&A: ask questions on [StackOverflow with the tag
-fmt](https://stackoverflow.com/questions/tagged/fmt).
+* 基于 `{fmt}` 源码进行整理和裁剪
+* 保留常用格式化功能
+* 精简原项目目录结构
+* 使用 CMake 管理库和测试构建
+* 支持独立构建静态库
+* 保留核心、可选以及嵌入式相关测试
+* 提供中文 API、语法和快速入门文档
+* 适合作为嵌入式平台移植的参考代码
 
-Try {fmt} in [Compiler Explorer](https://godbolt.org/z/8Mx1EW73v).
+当前项目主要关注：
 
-[![Live demo by Demoshell](https://build.demoshell.com/v1/embed/badge.svg)](https://build.demoshell.com/launch?snapshot=demoshell%2Ftools%3Afmt)
+```text
+源码结构
+    ↓
+CMake 构建
+    ↓
+格式化功能
+    ↓
+测试验证
+    ↓
+嵌入式平台移植
+```
 
-# Features
+---
 
-- Simple [format API](https://fmt.dev/latest/api/) with positional
-  arguments for localization
-- Implementation of [C++20
-  std::format](https://en.cppreference.com/w/cpp/utility/format) and
-  [C++23 std::print](https://en.cppreference.com/w/cpp/io/print)
-- [Format string syntax](https://fmt.dev/latest/syntax/) similar
-  to Python\'s
-  [format](https://docs.python.org/3/library/stdtypes.html#str.format)
-- Fast IEEE 754 floating-point formatter with correct rounding,
-  shortness and round-trip guarantees using the
-  [Dragonbox](https://github.com/jk-jeon/dragonbox) algorithm
-- Portable Unicode support
-- Safe [printf
-  implementation](https://fmt.dev/latest/api/#printf-api)
-  including the POSIX extension for positional arguments
-- Extensibility: [support for user-defined
-  types](https://fmt.dev/latest/api/#formatting-user-defined-types)
-- High performance: faster than common standard library
-  implementations of `(s)printf`, iostreams, `to_string` and
-  `to_chars`, see [Speed tests](#speed-tests) and [Converting a
-  hundred million integers to strings per
-  second](https://vitaut.net/posts/2020/fast-int-to-string-revisited/)
-- Small code size both in terms of source code with the minimum
-  configuration consisting of just three files, `base.h`, `format.h`
-  and `format-inl.h`, and compiled code; see [Compile time and code
-  bloat](#compile-time-and-code-bloat)
-- Reliability: the library has an extensive set of
-  [tests](https://github.com/fmtlib/fmt/tree/master/test) and is
-  [continuously fuzzed](https://bugs.chromium.org/p/oss-fuzz/issues/list?colspec=ID%20Type%20Component%20Status%20Proj%20Reported%20Owner%20Summary&q=proj%3Dfmt&can=1)
-- Safety: the library is fully type-safe, errors in format strings can
-  be reported at compile time, automatic memory management prevents
-  buffer overflow errors
-- Ease of use: small self-contained code base, no external
-  dependencies, permissive MIT
-  [license](https://github.com/fmtlib/fmt/blob/master/LICENSE)
-- [Portability](https://fmt.dev/latest/#portability) with
-  consistent output across platforms and support for older compilers
-- Clean warning-free codebase even on high warning levels such as
-  `-Wall -Wextra -pedantic`
-- Locale independence by default
-- Optional header-only configuration enabled with the
-  `FMT_HEADER_ONLY` macro
+## 二、项目结构
 
-See the [documentation](https://fmt.dev) for more details.
+```text
+Print_FMT/
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
+│
+├── include/
+│   └── fmt/
+│       ├── args.h
+│       ├── base.h
+│       ├── chrono.h
+│       ├── color.h
+│       ├── compile.h
+│       ├── core.h
+│       ├── enum.h
+│       ├── fmt-c.h
+│       ├── format.h
+│       ├── format-inl.h
+│       ├── os.h
+│       ├── ostream.h
+│       ├── printf.h
+│       ├── ranges.h
+│       ├── std.h
+│       └── xchar.h
+│
+├── src/
+│   ├── fmt-c.cc
+│   ├── format.cc
+│   └── os.cc
+│
+├── cases/
+│   ├── CMakeLists.txt
+│   ├── core/
+│   ├── optional/
+│   ├── embedded/
+│   └── support/
+│
+└── docs/
+    ├── api_zh.md
+    ├── get-started_zh.md
+    └── syntax_zh.md
+```
 
-# Examples
+### 目录说明
 
-**Print to stdout** ([run](https://godbolt.org/z/Tevcjh))
+| 目录 / 文件                | 作用             |
+| ---------------------- | -------------- |
+| `include/fmt/`         | 格式化库头文件        |
+| `src/`                 | 需要编译的源文件       |
+| `cases/core/`          | 核心功能测试         |
+| `cases/optional/`      | 可选功能测试         |
+| `cases/embedded/`      | 嵌入式相关测试        |
+| `cases/support/`       | 测试框架及测试辅助代码    |
+| `docs/`                | 中文使用、API 和语法文档 |
+| `CMakeLists.txt`       | 主构建脚本          |
+| `cases/CMakeLists.txt` | 测试构建脚本         |
 
-``` c++
+---
+
+## 三、构建库
+
+项目使用 CMake 构建。
+
+### 1. 创建构建目录
+
+```bash
+cmake -S . -B build -G "MinGW Makefiles"
+```
+
+### 2. 编译
+
+```bash
+cmake --build build
+```
+
+构建完成后会生成 `fmt` 静态库。
+
+---
+
+## 四、构建测试
+
+默认情况下：
+
+```cmake
+FMT_BUILD_TEST=OFF
+```
+
+只构建库，不构建测试。
+
+如果需要构建测试：
+
+```bash
+cmake -S . -B build -G "MinGW Makefiles" -DFMT_BUILD_TEST=ON
+```
+
+然后：
+
+```bash
+cmake --build build
+```
+
+运行测试：
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+测试代码按照功能划分：
+
+```text
+cases/
+├── core/       核心功能
+├── optional/   可选功能
+├── embedded/   嵌入式相关
+└── support/    测试支持代码
+```
+
+---
+
+## 五、基本使用
+
+### 格式化字符串
+
+```cpp
+#include <fmt/format.h>
+
+int main() {
+    auto text = fmt::format("value = {}", 123);
+}
+```
+
+### 输出格式化内容
+
+```cpp
 #include <fmt/base.h>
 
 int main() {
-  fmt::print("Hello, world!\n");
+    fmt::print("Hello, {}!\n", "world");
 }
 ```
 
-**Format a string** ([run](https://godbolt.org/z/oK8h33))
+### 多个参数
 
-``` c++
-std::string s = fmt::format("The answer is {}.", 42);
-// s == "The answer is 42."
-```
-
-**Format a string using positional arguments**
-([run](https://godbolt.org/z/Yn7Txe))
-
-``` c++
-std::string s = fmt::format("I'd rather be {1} than {0}.", "right", "happy");
-// s == "I'd rather be happy than right."
-```
-
-**Print dates and times** ([run](https://godbolt.org/z/c31ExdY3W))
-
-``` c++
-#include <fmt/chrono.h>
+```cpp
+#include <fmt/format.h>
 
 int main() {
-  auto now = std::chrono::system_clock::now();
-  fmt::print("Date and time: {}\n", now);
-  fmt::print("Time: {:%H:%M}\n", now);
+    auto text = fmt::format(
+        "name = {}, value = {}",
+        "test",
+        123
+    );
 }
 ```
 
-Output:
+---
 
-    Date and time: 2023-12-26 19:10:31.557195597
-    Time: 19:10
+## 六、源码组成
 
-**Print a container** ([run](https://godbolt.org/z/MxM1YqjE7))
+当前静态库主要由以下源文件组成：
 
-``` c++
-#include <vector>
-#include <fmt/ranges.h>
-
-int main() {
-  std::vector<int> v = {1, 2, 3};
-  fmt::print("{}\n", v);
-}
+```text
+src/
+├── format.cc
+├── os.cc
+└── fmt-c.cc
 ```
 
-Output:
+对应头文件位于：
 
-    [1, 2, 3]
-
-**Check a format string at compile time**
-
-``` c++
-std::string s = fmt::format("{:d}", "I am not a number");
+```text
+include/fmt/
 ```
 
-This gives a compile-time error in C++20 because `d` is an invalid
-format specifier for a string.
+其中：
 
-**Write a file from a single thread**
+* `format.cc`：主要格式化实现
+* `os.cc`：操作系统相关功能
+* `fmt-c.cc`：C API 相关实现
 
-``` c++
-#include <fmt/os.h>
+具体 API 和功能可以参考：
 
-int main() {
-  auto out = fmt::output_file("guide.txt");
-  out.print("Don't {}", "Panic");
-}
+* [`docs/api_zh.md`](docs/api_zh.md)
+* [`docs/syntax_zh.md`](docs/syntax_zh.md)
+* [`docs/get-started_zh.md`](docs/get-started_zh.md)
+
+---
+
+## 七、嵌入式移植
+
+本项目的一个主要用途是作为 `{fmt}` 的**嵌入式移植参考**。
+
+移植时主要关注：
+
+```text
+include/fmt/
+        │
+        ├── 头文件依赖
+        │
+        ▼
+src/
+        │
+        ├── format.cc
+        ├── os.cc
+        └── fmt-c.cc
+        │
+        ▼
+目标平台编译器 / SDK
 ```
 
-This can be [up to 9 times faster than `fprintf`](
-https://vitaut.net/posts/2020/optimal-file-buffer-size/).
+对于资源受限的平台，可以根据实际需求进一步裁剪：
 
-**Print with colors and text styles**
+* 不需要的功能头文件
+* 不需要的源文件
+* 与目标平台无关的 OS 功能
+* 不需要的测试代码
 
-``` c++
-#include <fmt/color.h>
+建议先保证核心格式化功能正常，再根据目标平台逐步进行裁剪。
 
-int main() {
-  fmt::print(fg(fmt::color::crimson) | fmt::emphasis::bold,
-             "Hello, {}!\n", "world");
-  fmt::print(fg(fmt::color::floral_white) | bg(fmt::color::slate_gray) |
-             fmt::emphasis::underline, "Olá, {}!\n", "Mundo");
-  fmt::print(fg(fmt::color::steel_blue) | fmt::emphasis::italic,
-             "你好{}！\n", "世界");
-}
+---
+
+## 八、测试与移植验证
+
+在修改源码或进行平台移植后，可以按照以下顺序验证：
+
+```text
+1. 编译 fmt 库
+       ↓
+2. 编译测试程序
+       ↓
+3. 运行 CTest
+       ↓
+4. 确认核心格式化功能
+       ↓
+5. 再进行目标平台移植
 ```
 
-Output on a modern terminal with Unicode support:
+这样可以将：
 
-![image](https://github.com/fmtlib/fmt/assets/576385/2a93c904-d6fa-4aa6-b453-2618e1c327d7)
+```text
+源码问题
+```
 
-# Performance
+与：
 
-{fmt} can be tens of percent to 20–30 times faster than `sprintf` and
-iostreams, especially for numeric formatting. It minimizes dynamic memory
-allocations and can optionally [compile format strings](
-https://fmt.dev/latest/api/#compile-api) into efficient formatting code.
+```text
+平台移植问题
+```
 
-See [format-benchmark](https://github.com/fmtlib/format-benchmark) and
-[dtoa-benchmark](https://github.com/fmtlib/dtoa-benchmark) for benchmarks
-and methodology.
+尽量分开。
 
-**Time per double (smaller is better):**
+---
 
-[![Time per double for floating-point formatting methods](
-https://github.com/user-attachments/assets/3678bc4a-9405-489e-8ce1-ca702829cdaa)](
-https://github.com/fmtlib/dtoa-benchmark)
+## 九、中文文档
 
-`ostringstream` and `sprintf` are omitted because they are an order of
-magnitude slower than the other methods.
+项目目前保留以下中文文档：
 
-## Compile time and code bloat
+### API 文档
 
-The script [bloat-test.py][test] from [format-benchmark][bench] tests compile
-time and code bloat for nontrivial projects. It generates 100 translation units
-and uses `printf()` or its alternative five times in each to simulate a
-medium-sized project. The resulting executable size and compile time on an
-Apple M5 Max running macOS 26.6.2 with Apple Clang 21.0.0
-(clang-2100.1.1.101), taking the best of three runs, are shown in the following
-tables.
+[`docs/api_zh.md`](docs/api_zh.md)
 
-[test]: https://github.com/fmtlib/format-benchmark/blob/master/bloat-test.py
-[bench]: https://github.com/fmtlib/format-benchmark
+用于了解主要 API 和接口使用方式。
 
-**Optimized build (-O3)**
+### 快速入门
 
-| Method                   | Compile Time, s | Executable size, KiB | Stripped size, KiB |
-|--------------------------|-----------------|----------------------|--------------------|
-| printf                   |             1.6 |                   54 |                 50 |
-| IOStreams                |            25.5 |                   98 |                 84 |
-| {fmt} 12.2 (non-modular) |             5.1 |                   54 |                 50 |
-| {fmt} 12.2 (modular)     |             3.7 |                   59 |                 50 |
-| Boost Format 1.92        |            49.1 |                  517 |                317 |
+[`docs/get-started_zh.md`](docs/get-started_zh.md)
 
-Modular {fmt} is faster to compile than non-modular {fmt}, and both are
-comparable to `printf` in terms of per-call binary size (within a rounding error
-on this system).
+用于了解项目构建、使用以及不同构建方式。
 
-**Non-optimized build**
+### 语法
 
-| Method                   | Compile Time, s | Executable size, KiB | Stripped size, KiB |
-|--------------------------|-----------------|----------------------|--------------------|
-| printf                   |             1.6 |                   54 |                 50 |
-| IOStreams                |            26.0 |                   88 |                 68 |
-| {fmt} 12.2 (non-modular) |             4.9 |                   87 |                 84 |
-| {fmt} 12.2 (modular)     |             3.2 |                   77 |                 68 |
-| Boost Format 1.92        |            35.7 |                  741 |                431 |
+[`docs/syntax_zh.md`](docs/syntax_zh.md)
 
-`libc`, `libc++`, `libfmt`, and `libfmt-module` were linked as shared libraries
-to compare formatting function overhead only. Boost Format is header-only.
+用于了解格式字符串的语法和格式说明。
 
-# Projects using {fmt}
+---
 
-Notable users include:
+## 十、项目定位
 
-- [Apple's FoundationDB](https://github.com/apple/foundationdb)
-- [Blizzard Battle.net](https://battle.net/)
-- [Ceph](https://ceph.com/)
-- [ClickHouse](https://github.com/ClickHouse/ClickHouse)
-- [Envoy](https://github.com/envoyproxy/envoy)
-- [Folly](https://github.com/facebook/folly)
-- [MariaDB](https://mariadb.org/)
-- [MongoDB](https://mongodb.com/)
-- [PyTorch](https://github.com/pytorch/pytorch)
-- [Seastar](https://seastar.io/)
-- [spdlog](https://github.com/gabime/spdlog)
-- [Windows Terminal](https://github.com/microsoft/terminal)
+`Print_FMT` 并不是对上游 `{fmt}` 项目的完整复制。
 
-[Find more projects using {fmt} on GitHub](
-https://github.com/search?q=fmtlib&type=Code).
+本项目主要用于：
+
+```text
+学习
+ ↓
+理解源码
+ ↓
+理解构建系统
+ ↓
+裁剪不需要的功能
+ ↓
+测试
+ ↓
+嵌入式平台移植
+```
+
+如果需要完整的 `{fmt}` 项目、完整测试体系、完整文档系统以及最新上游功能，请参考官方项目：
+
+https://github.com/fmtlib/fmt
+
+---
+
+## 十一、许可证
+
+本项目基于 `{fmt}` 整理。
+
+相关许可证信息请参阅：
+
+```text
+LICENSE
+```
+
+上游 `{fmt}` 项目：
+
+https://github.com/fmtlib/fmt
