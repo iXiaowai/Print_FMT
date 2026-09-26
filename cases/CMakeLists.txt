@@ -66,7 +66,7 @@ add_fmt_test(enum-test
 
 add_fmt_test(format-test
     core/format-test.cc
-    embedded/mock-allocator.h
+    support/mock-allocator.h
 )
 
 
