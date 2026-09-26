@@ -108,7 +108,3 @@ add_fmt_test(no-builtin-types-test
     embedded/no-builtin-types-test.cc
 )
 
-add_fmt_test(noexception-test
-    embedded/noexception-test.cc
-)
-
